@@ -1,5 +1,7 @@
 package com.app_ossebi.webretail;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,8 +24,12 @@ public class UserController {
      * @return List of all users
      */
     @GetMapping("/users")
-    public List<User> getAllUsers() {
-        return userService.fetchAllUsers();
+    public ResponseEntity<List<User>> getAllUsers() {
+        if (userService.fetchAllUsers().isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        // Retrieve all users
+        return ResponseEntity.ok(userService.fetchAllUsers());
     }
 
     /**
@@ -32,10 +38,18 @@ public class UserController {
      * @param user The user object containing user details
      * @return A success message indicating the user was created
      */
-    @PostMapping("/user")
-    public String createUser(@RequestBody User user) {
+    @PostMapping("/users")
+    public ResponseEntity<String> createUser(@RequestBody User user) {
+        // Check if user is valid
+
+        if(user == null){
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid user");
+        }
+        // Create the user
         userService.createUser(user);
-        return "User created successfully";
+
+        // Return a success message
+        return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully: " + user);
     }
 
     /**
@@ -45,7 +59,21 @@ public class UserController {
      * @return The user with the specified ID, or null if not found
      */
     @GetMapping("/user/{id}")
-    public User getUserById(@PathVariable int id) {
-        return userService.fetchUserById(id);
+    public ResponseEntity<User> getUserById(@PathVariable int id) {
+
+        return userService.fetchUserById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+
+//        User user = userService.fetchUserById(id);
+//        if (user == null) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @PutMapping("/user/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable long id, @RequestBody User user) {
+        return userService.updateUser(id, user).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 }
