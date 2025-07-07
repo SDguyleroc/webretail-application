@@ -1,25 +1,33 @@
 package com.app_ossebi.webretail;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.List;
+
 @RestController
+@RequestMapping("/api")
 public class UserController {
 
-    private List<User> userList = new ArrayList<>();
+    @Autowired
+  private UserService userService;
 
-    @GetMapping("/api/users")
+
+
+    @GetMapping("/users")
     public List<User> getAllUsers() {
-        return userList;
+        return userService.fetchAllUsers();
     }
 
-    @PostMapping("/api/users")
-    public List<User> createUser(@RequestBody User user) {
-        userList.add(user);
-        return userList;
+    @PostMapping("/user")
+    public String createUser(@RequestBody User user) {
+        userService.createUser(user);
+        return "User created successfully";
     }
+
+    @GetMapping("/user/{id}")
+    public User getUserById(@PathVariable int id) {
+        return userService.fetchUserById(id);
+    }
+
 }
