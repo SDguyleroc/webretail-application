@@ -48,6 +48,7 @@ public class UserService {
         return userList.stream()
                 .filter(user -> user.getId().equals(id))
                 .findFirst();
+
 //        for (User user: userList){
 //            if(user.getId().equals(id)){
 //                return user;
