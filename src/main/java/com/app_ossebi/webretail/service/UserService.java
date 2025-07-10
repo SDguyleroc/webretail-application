@@ -1,11 +1,10 @@
-package com.app_ossebi.webretail;
+package com.app_ossebi.webretail.service;
 
+import com.app_ossebi.webretail.model.User;
+import com.app_ossebi.webretail.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,6 +78,8 @@ public class UserService {
                 .map(existingUser -> {
                     existingUser.setLastName(userDetails.getFirstName());
                     existingUser.setLastName(userDetails.getLastName());
+                    existingUser.setEmail(userDetails.getEmail());
+                    existingUser.setPhoneNumber(userDetails.getPhoneNumber());
                     userRepository.save(existingUser);
                     return true;
                 } ).orElse(false);

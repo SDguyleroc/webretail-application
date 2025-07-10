@@ -1,5 +1,7 @@
-package com.app_ossebi.webretail;
+package com.app_ossebi.webretail.controller;
 
+import com.app_ossebi.webretail.service.UserService;
+import com.app_ossebi.webretail.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
