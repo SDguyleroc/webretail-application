@@ -73,7 +73,11 @@ public class UserController {
     }
 
     @PutMapping("/user/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable long id, @RequestBody User user) {
-        return userService.updateUser(id, user).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<String> updateUser(@PathVariable long id, @RequestBody User user) {
+        if (userService.updateUser(id, user)) {
+            return ResponseEntity.ok("User updated successfully: " + user);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found: " + id);
+        }
     }
 }

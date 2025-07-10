@@ -1,5 +1,7 @@
 package com.app_ossebi.webretail;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +14,11 @@ import java.util.Optional;
  * Handles operations such as creating, retrieving, and managing users.
  */
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    private long id = 0L;
-    private final List<User> userList = new ArrayList<>();
+
+    private final UserRepository userRepository;
 
     /**
      * Retrieves all users currently stored in the system.
@@ -23,7 +26,7 @@ public class UserService {
      * @return A list containing all users
      */
     public List<User> fetchAllUsers() {
-        return userList;
+        return userRepository.findAll();
     }
 
     /**
@@ -33,8 +36,8 @@ public class UserService {
      * @param user The user object to be created
      */
     public void createUser(User user) {
-        user.setId(id++);
-        userList.add(user);
+
+        userRepository.save(user);
     }
 
     /**
@@ -45,9 +48,12 @@ public class UserService {
      */
     public Optional<User> fetchUserById(long id) {
 
-        return userList.stream()
-                .filter(user -> user.getId().equals(id))
-                .findFirst();
+        return userRepository.findById(id);
+
+
+//        return userList.stream()
+//                .filter(user -> user.getId().equals(id))
+//                .findFirst();
 
 //        for (User user: userList){
 //            if(user.getId().equals(id)){
@@ -66,16 +72,27 @@ public class UserService {
 
     }
 
-    public Optional<User> updateUser(long id, User userDetails) {
-        // using stream
-        return userList.stream()
-                .filter(user -> user.getId().equals(id))
-                .findFirst()
-                .map(user -> {
-                    user.setFirstName(userDetails.getFirstName());
-                    user.setLastName(userDetails.getLastName());
-                    return user;
-                });
+    public boolean updateUser(long id, User userDetails) {
+
+        // JPA
+        return userRepository.findById(id)
+                .map(existingUser -> {
+                    existingUser.setLastName(userDetails.getFirstName());
+                    existingUser.setLastName(userDetails.getLastName());
+                    userRepository.save(existingUser);
+                    return true;
+                } ).orElse(false);
+
+
+        // using stream with a List<User> userList = new ArrayList<>();
+//        return userList.stream()
+//                .filter(user -> user.getId().equals(id))
+//                .findFirst()
+//                .map(user -> {
+//                    user.setFirstName(userDetails.getFirstName());
+//                    user.setLastName(userDetails.getLastName());
+//                    return user;
+//                });
 
 
         // Update the user using the provided ID with the new user details using a for loop

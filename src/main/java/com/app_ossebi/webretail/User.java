@@ -13,10 +13,9 @@ import lombok.NoArgsConstructor;
  * This class is a data model containing user information.
  */
 @Data // Generates getter and setter methods
-// @Entity(name = "user_table") // Indicates that this class is a JPA entity and should be mapped to a database table
+@Entity(name = "user_table") // Indicates that this class is a JPA entity and should be mapped to a database table
 @NoArgsConstructor // Generates a no-argument constructor
 //@AllArgsConstructor // Generates a constructor with all arguments
-@Entity
 public class User {
     /**
      * The unique identifier for the user.
