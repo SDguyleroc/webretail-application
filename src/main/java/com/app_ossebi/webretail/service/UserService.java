@@ -80,6 +80,7 @@ public class UserService {
                     existingUser.setLastName(userDetails.getLastName());
                     existingUser.setEmail(userDetails.getEmail());
                     existingUser.setPhoneNumber(userDetails.getPhoneNumber());
+                    existingUser.setAddress(userDetails.getAddress());
                     userRepository.save(existingUser);
                     return true;
                 } ).orElse(false);
