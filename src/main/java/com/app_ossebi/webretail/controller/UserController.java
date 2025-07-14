@@ -1,5 +1,7 @@
 package com.app_ossebi.webretail.controller;
 
+import com.app_ossebi.webretail.dto.UserRequest;
+import com.app_ossebi.webretail.dto.UserRespond;
 import com.app_ossebi.webretail.service.UserService;
 import com.app_ossebi.webretail.model.User;
 import org.springframework.http.HttpStatus;
@@ -26,7 +28,7 @@ public class UserController {
      * @return List of all users
      */
     @GetMapping("/users")
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<UserRespond>> getAllUsers() {
         if (userService.fetchAllUsers().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -41,7 +43,7 @@ public class UserController {
      * @return A success message indicating the user was created
      */
     @PostMapping("/users")
-    public ResponseEntity<String> createUser(@RequestBody User user) {
+    public ResponseEntity<String> createUser(@RequestBody UserRequest user) {
         // Check if user is valid
 
         if(user == null){
@@ -61,7 +63,7 @@ public class UserController {
      * @return The user with the specified ID, or null if not found
      */
     @GetMapping("/user/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable int id) {
+    public ResponseEntity<UserRespond> getUserById(@PathVariable int id) {
 
         return userService.fetchUserById(id)
                 .map(ResponseEntity::ok)
