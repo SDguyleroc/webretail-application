@@ -81,16 +81,14 @@ public class UserService {
 
     }
 
-    public boolean updateUser(long id, User userDetails) {
+    public boolean updateUser(long id, UserRequest updatedUserRequest) {
 
         // JPA
+        // using a lambda expression to update the user details in the database using the provided ID and new user details
+        // if the user is found, update the user details and return true otherwise return false
         return userRepository.findById(id)
                 .map(existingUser -> {
-                    existingUser.setLastName(userDetails.getFirstName());
-                    existingUser.setLastName(userDetails.getLastName());
-                    existingUser.setEmail(userDetails.getEmail());
-                    existingUser.setPhoneNumber(userDetails.getPhoneNumber());
-                    existingUser.setAddress(userDetails.getAddress());
+                    UpdateUserFromUserRequest(updatedUserRequest, existingUser);
                     userRepository.save(existingUser);
                     return true;
                 } ).orElse(false);
